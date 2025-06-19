@@ -46,20 +46,20 @@ GitHub repository (if using CI/CD)
 
 🛠️ Setup Instructions
 1️⃣ Infrastructure Provisioning
-'''bash
+```bash
 cd terraform
 terraform init
 terraform apply
-'''
+```
 Creates VPC, public/private subnets, Internet Gateway, EKS cluster, IAM roles.
 
 2️⃣ Configure AWS CLI & EKS Access
-'''bash
+```bash
 aws eks --region <region> update-kubeconfig --name <eks-cluster-name>
 kubectl get nodes
-'''
+```
 3️⃣ Deploy PostgreSQL & Redis via Helm
-'''bash
+```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm install my-postgresql bitnami/postgresql \
@@ -67,16 +67,16 @@ helm install my-postgresql bitnami/postgresql \
 
 helm install my-redis bitnami/redis \
   --set auth.password=myredispass
-'''
+```
 4️⃣ Dockerize & Push Microservices
-'''bash
+```bash
 # Auth Service (Django)
 cd auth-service
 docker build -t mayur702/loginapi .
 docker push mayur702/loginapi:v1
-'''
+```
 5️⃣ Deploy Services to Kubernetes
-'''bash
+```bash
 kubectl apply -f ConfigMap.yaml
 kubectl apply -f secret.yaml
 
@@ -90,19 +90,19 @@ kubectl apply -f Springboot-deployment.yaml
 kubectl apply -f Springboot-svc.yaml
 
 kubectl apply -f app-ingress.yaml
-'''
+```
 7️⃣ Setup Ingress Controller
-'''bash
+```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
 kubectl apply -f ingress/ingress.yaml
-'''
+```
 
 Test access using:
-'''bash
+```bash
 curl http://<external-ip>/auth/login
 curl http://<external-ip>/data/info
 curl http://<external-ip>/report/summary
-'''
+```
 
 
 
