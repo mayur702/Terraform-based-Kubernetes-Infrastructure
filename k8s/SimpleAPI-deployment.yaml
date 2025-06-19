@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simpleapi-deployment
+  namespace: dev
+  labels:
+    app: simpleapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simpleapi
+  template:
+    metadata:
+      labels:
+        app: simpleapi
+    spec:
+      initContainers:
+        - name: init-db-file
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /app/db && touch /app/db/users.db"]
+          volumeMounts:
+            - name: db-volume
+              mountPath: /app/db
+      containers:
+        - name: simpleapi
+          image: mayur702/simpleapi:v2
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          volumeMounts:
+            - name: db-volume
+              mountPath: /app/db/users.db
+              subPath: users.db
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: db-volume
+          emptyDir: {}
+

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loginapi-deployment
+  namespace: dev
+  labels:
+    app: loginapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loginapi
+  template:
+    metadata:
+      labels:
+        app: loginapi
+    spec:
+      containers:
+        - name: loginapi
+          image: mayur702/loginapi:v5
+          ports:
+            - containerPort: 8000
+

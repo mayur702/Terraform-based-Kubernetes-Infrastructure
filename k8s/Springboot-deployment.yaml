@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-rest-deployment
+  namespace: dev
+  labels:
+    app: springboot-rest
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springboot-rest
+  template:
+    metadata:
+      labels:
+        app: springboot-rest
+    spec:
+      containers:
+        - name: springboot-rest
+          image: mayur702/springboot-rest-example:v1
+          ports:
+            - containerPort: 8091
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+
